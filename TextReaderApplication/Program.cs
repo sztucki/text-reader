@@ -1,2 +1,17 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using System.Reflection;
+using TextReaderApplication;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+//option one has the weird logging but has the weird logging
+
+await Host.CreateDefaultBuilder(args)
+    .UseContentRoot(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
+    .ConfigureLogging(builder => builder.SetMinimumLevel(LogLevel.Warning))
+    .ConfigureServices((hostContext, services) => {
+        services
+            .AddSingleton<IFileImporter, FileImporter>()
+            .AddHostedService<ConsoleHostedService>();
+
+    })
+    .RunConsoleAsync();
