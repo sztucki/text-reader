@@ -11,6 +11,7 @@ await Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) => {
         services
             .AddSingleton<IFileImporter, FileImporter>()
+            .AddSingleton<IWordProcessor,WordProcessor>()
             .AddHostedService<ConsoleHostedService>();
 
     })

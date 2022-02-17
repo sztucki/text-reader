@@ -7,18 +7,20 @@ internal sealed class ConsoleHostedService : IHostedService {
     private readonly ILogger _logger;
     private readonly IHostApplicationLifetime _appLifetime;
     private readonly IFileImporter _fileImporter;
-
+    private readonly IWordProcessor _wordProcessor;
     private Task? _applicationTask;
     private int? _exitCode;
 
     public ConsoleHostedService(
         ILogger<ConsoleHostedService> logger,
         IHostApplicationLifetime appLifetime,
-        IFileImporter fileImporter
+        IFileImporter fileImporter,
+        IWordProcessor wordProcessor
         ) {
         _logger = logger;
         _appLifetime = appLifetime;
         _fileImporter = fileImporter;
+        _wordProcessor = wordProcessor;
     }
 
     public Task StartAsync(CancellationToken cancellationToken) {
@@ -32,7 +34,8 @@ internal sealed class ConsoleHostedService : IHostedService {
             _applicationTask = Task.Run(async () => {
                 try {
                     Console.WriteLine("Welcome to the test reader Application!");
-                    _fileImporter.ImportFile();
+                    var t = new List<string>();
+                    await _wordProcessor.GetValidWords(t, "","");
 
 
                 }
