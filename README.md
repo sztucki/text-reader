@@ -10,7 +10,7 @@ From there I need to look at the altnerative setup in the program.cs file and ge
 
 To make things a bit easier during testing I have the minimum logging level to warnings so you don't have text appearing once the console application starts. 
 
-###T ackling the problem
+### Tackling the problem
 
 Now that i had a console application the next step was to review the problem which i needed to solve. Based on this the first step was to be able to get hold of the words in the file.
 
