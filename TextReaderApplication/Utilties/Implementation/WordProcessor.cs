@@ -18,7 +18,7 @@ namespace TextReaderApplication {
         /// <param name="startWord"></param>
         /// <param name="endWord"></param>
         /// <returns></returns>
-        public async Task<List<string>> GetValidWords(List<string> wordList, string startWord, string endWord) {
+        public List<string> GetValidWords(List<string> wordList, string startWord, string endWord) {
 
             List<string> validWords = new List<string>();
 

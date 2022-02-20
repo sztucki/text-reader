@@ -83,7 +83,7 @@ internal sealed class ConsoleHostedService : IHostedService {
                     }
 
 
-                    List<string> validWords = await _wordProcessor.GetValidWords(wordList, startWord, endWord);
+                    List<string> validWords = _wordProcessor.GetValidWords(wordList, startWord, endWord);
 
                    await _fileImporter.WriteWordsToFile(outputFilePath, validWords);
                 }
