@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using FluentValidation.Results;
+using FluentValidation;
 
 namespace TextReaderApplication;
 
@@ -10,17 +12,20 @@ internal sealed class ConsoleHostedService : IHostedService {
     private readonly IWordProcessor _wordProcessor;
     private Task? _applicationTask;
     private int? _exitCode;
+    private readonly IValidator<string> _fileValidator;
 
     public ConsoleHostedService(
         ILogger<ConsoleHostedService> logger,
         IHostApplicationLifetime appLifetime,
         IFileImporter fileImporter,
-        IWordProcessor wordProcessor
+        IWordProcessor wordProcessor,
+        IValidator<string> fileValidator
         ) {
         _logger = logger;
         _appLifetime = appLifetime;
         _fileImporter = fileImporter;
         _wordProcessor = wordProcessor;
+        _fileValidator = fileValidator;
     }
 
     public Task StartAsync(CancellationToken cancellationToken) {
@@ -34,8 +39,34 @@ internal sealed class ConsoleHostedService : IHostedService {
             _applicationTask = Task.Run(async () => {
                 try {
                     Console.WriteLine("Welcome to the test reader Application!");
-                    var t = new List<string>();
-                    await _wordProcessor.GetValidWords(t, "","");
+                    Console.WriteLine("Please enter a valid file for import:");
+                    string filePath = Console.ReadLine() ?? "";
+
+                    bool validFilePath = false;
+                    while (validFilePath == false) {
+                        ValidationResult result = _fileValidator.Validate(filePath);
+                        if (result.IsValid) {
+                            validFilePath = true;
+                        }
+                        else {
+                            foreach (ValidationFailure error in result.Errors) {
+                                Console.WriteLine(error);
+                            }
+                            filePath = Console.ReadLine() ?? "";
+                        }
+                    }
+
+
+                    Console.WriteLine("Please enter a start word:");
+                    string startWord = Console.ReadLine() ?? "";
+
+                    Console.WriteLine("Please enter a end word:");
+                    string endWord = Console.ReadLine() ?? "";
+
+
+                    List<string> wordList = await _fileImporter.GetFileWords(filePath);
+
+                    List<string> validWords = await _wordProcessor.GetValidWords(wordList, startWord, endWord);
 
 
                 }

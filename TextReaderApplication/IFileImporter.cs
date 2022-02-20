@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace TextReaderApplication {
     internal interface IFileImporter {
         Task<List<string>> GetFileWords(string filePath);
-        Task<bool> IsValidFilePath(string filePath);
-        Task<bool> IsValidFileType(string filePath);
+        Task WriteWordsToFile(string filePath, List<string> wordList);
 
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace TextReaderApplication {
     public class WordProcessor : IWordProcessor {
+        static HttpClient client = new HttpClient();
 
         public async Task<List<string>> GetValidWords(List<string> wordList, string startWord, string endWord) {
 
@@ -15,16 +16,18 @@ namespace TextReaderApplication {
             int endindex = wordList.IndexOf(endWord);
 
             int numberToSelect = endindex - startindex;
-            Console.WriteLine($"start: {startindex}, end: {endindex}");
-            Console.WriteLine($"start: {"burg"}, end: {"bush"}");
 
             List<string> WordsInRange = wordList.Skip(startindex).Take(numberToSelect).ToList();
 
             string previousValidWord = "";
             foreach (string currentWord in WordsInRange) {
 
-                //check length
-                if (IsValidCharacterLength(currentWord)) {
+
+                if (!IsValidCharacterLength(currentWord)) {
+                    continue;
+                }
+
+                if (! await IsValidWordAsync(currentWord)) {
                     continue;
                 }
 
@@ -37,12 +40,11 @@ namespace TextReaderApplication {
 
             }
 
-
             return validWords;
         }
 
         private bool IsValidCharacterLength(string word) {
-            if (word.Length != 4) {
+            if (word.Length == 4) {
                 return true;
             }
             return false;
@@ -70,7 +72,7 @@ namespace TextReaderApplication {
             return false;
         }
 
-        static HttpClient client = new HttpClient();
+
 
         
         public async Task<bool> IsValidWordAsync(string word) {
