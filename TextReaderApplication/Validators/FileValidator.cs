@@ -1,11 +1,6 @@
-﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TextReaderApplication {
+    using FluentValidation;
 
-namespace TextReaderApplication {
     public class FileValidator : AbstractValidator<string> {
         public FileValidator() {
             RuleFor(s => s).Must(IsValidFilePath).WithMessage("Please enter a valid file path");

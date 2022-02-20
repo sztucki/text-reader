@@ -1,48 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TextReaderApplication.Validators {
+    using FluentValidation;
+    using TextReaderApplication.Models;
 
-namespace TextReaderApplication {
-    public class WordProcessor : IWordProcessor {
+    public class WordValidator : AbstractValidator<WordPair> {
         static HttpClient client = new HttpClient();
-
-        public async Task<List<string>> GetValidWords(List<string> wordList, string startWord, string endWord) {
-
-            List<string> validWords = new List<string>();
-
-            int startindex = wordList.IndexOf(startWord);
-            int endindex = wordList.IndexOf(endWord);
-
-            int numberToSelect = endindex - startindex;
-
-            List<string> WordsInRange = wordList.Skip(startindex).Take(numberToSelect).ToList();
-
-            string previousValidWord = "";
-            foreach (string currentWord in WordsInRange) {
-
-
-                if (!IsValidCharacterLength(currentWord)) {
-                    continue;
-                }
-
-                if (! await IsValidWordAsync(currentWord)) {
-                    continue;
-                }
-
-                if (!DoWordsDifferByMoreThanOneCharacter(previousValidWord, currentWord)) {
-                    continue;
-                }
-
-                previousValidWord = currentWord;
-                Console.WriteLine($"valid word: {currentWord}");
-
-            }
-
-            return validWords;
+        public WordValidator() {
+            RuleFor(s => s.CurrentWord).Must(IsValidCharacterLength);
+            RuleFor(s => s.CurrentWord).MustAsync((x, cancellation) => IsValidWordAsync(x));
+            RuleFor(s => s.CurrentWord).Must((x, currentWord) =>
+    DoWordsDifferByMoreThanOneCharacter(x.PreviousWord, currentWord));
         }
 
+
+
+        /// <summary>
+        /// Checks to see if the word is the correct length
+        /// </summary>
+        /// <param name="word"></param>
+        /// <returns></returns>
         private bool IsValidCharacterLength(string word) {
             if (word.Length == 4) {
                 return true;
@@ -50,6 +25,12 @@ namespace TextReaderApplication {
             return false;
         }
 
+        /// <summary>
+        /// See if words differ by more than one character
+        /// </summary>
+        /// <param name="previousWord"></param>
+        /// <param name="currentWord"></param>
+        /// <returns></returns>
         private bool DoWordsDifferByMoreThanOneCharacter(string previousWord, string currentWord) {
             //see if current and previous word differ by 1 or more character
             List<char> currentLetters = currentWord.ToCharArray().ToList();
@@ -74,7 +55,11 @@ namespace TextReaderApplication {
 
 
 
-        
+        /// <summary>
+        /// Checks to see if the passed in word can be found in the dictionary
+        /// </summary>
+        /// <param name="word"></param>
+        /// <returns></returns>
         public async Task<bool> IsValidWordAsync(string word) {
 
 

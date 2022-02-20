@@ -40,22 +40,23 @@ internal sealed class ConsoleHostedService : IHostedService {
                 try {
                     Console.WriteLine("Welcome to the test reader Application!");
                     Console.WriteLine("Please enter a valid file for import:");
-                    string filePath = Console.ReadLine() ?? "";
+                    string importFilePath = Console.ReadLine() ?? "";
 
-                    bool validFilePath = false;
-                    while (validFilePath == false) {
-                        ValidationResult result = _fileValidator.Validate(filePath);
+                    bool validImportFilePath = false;
+                    while (validImportFilePath == false) {
+                        ValidationResult result = _fileValidator.Validate(importFilePath);
                         if (result.IsValid) {
-                            validFilePath = true;
+                            validImportFilePath = true;
                         }
                         else {
                             foreach (ValidationFailure error in result.Errors) {
                                 Console.WriteLine(error);
                             }
-                            filePath = Console.ReadLine() ?? "";
+                            importFilePath = Console.ReadLine() ?? "";
                         }
                     }
 
+                    List<string> wordList = await _fileImporter.GetFileWords(importFilePath);
 
                     Console.WriteLine("Please enter a start word:");
                     string startWord = Console.ReadLine() ?? "";
@@ -64,11 +65,27 @@ internal sealed class ConsoleHostedService : IHostedService {
                     string endWord = Console.ReadLine() ?? "";
 
 
-                    List<string> wordList = await _fileImporter.GetFileWords(filePath);
+                    Console.WriteLine("please enter a valid file path for an existing .txt file for output");
+                    string outputFilePath = Console.ReadLine() ?? "";
+
+                    bool validOutputFilePath = false;
+                    while (validOutputFilePath == false) {
+                        ValidationResult result = _fileValidator.Validate(outputFilePath);
+                        if (result.IsValid) {
+                            validOutputFilePath = true;
+                        }
+                        else {
+                            foreach (ValidationFailure error in result.Errors) {
+                                Console.WriteLine(error);
+                            }
+                            outputFilePath = Console.ReadLine() ?? "";
+                        }
+                    }
+
 
                     List<string> validWords = await _wordProcessor.GetValidWords(wordList, startWord, endWord);
 
-
+                   await _fileImporter.WriteWordsToFile(outputFilePath, validWords);
                 }
                 catch (TaskCanceledException) {
                     // This means the application is shutting down, so just swallow this exception
