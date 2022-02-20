@@ -1,1 +1,1 @@
-# text-reader
+# Text Reader console application
