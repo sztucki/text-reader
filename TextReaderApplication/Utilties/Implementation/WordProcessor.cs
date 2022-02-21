@@ -29,9 +29,8 @@ namespace TextReaderApplication {
 
             List<string> WordsInRange = wordList.Skip(startindex).Take(numberToSelect).ToList();
 
-            
-            foreach (string currentWord in WordsInRange) {
-                WordPair pair = new WordPair();
+            WordPair pair = new WordPair();
+            foreach (string currentWord in WordsInRange) {                
                 pair.CurrentWord = currentWord;
 
                var status =  _wordValidator.Validate(pair);

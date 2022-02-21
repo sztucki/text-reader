@@ -5,6 +5,7 @@
     public class WordValidator : AbstractValidator<WordPair> {
         static HttpClient client = new HttpClient();
         public WordValidator() {
+            CascadeMode = CascadeMode.Stop;
             RuleFor(s => s.CurrentWord).Must(IsValidCharacterLength);
             RuleFor(s => s.CurrentWord).MustAsync((x, cancellation) => IsValidWordAsync(x));
             RuleFor(s => s.CurrentWord).Must((x, currentWord) =>

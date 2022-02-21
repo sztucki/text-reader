@@ -3,6 +3,7 @@
 
     public class FileValidator : AbstractValidator<string> {
         public FileValidator() {
+            CascadeMode = CascadeMode.Stop;
             RuleFor(s => s).Must(IsValidFilePath).WithMessage("Please enter a valid file path");
             RuleFor(s => s).Must(IsValidFileType).WithMessage("Please select a valid .txt file");
         }

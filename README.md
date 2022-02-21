@@ -18,7 +18,7 @@ The easiest option to this was to read all the lines of the file out into a list
 
 Initially I just wanted to ensure that I would be able to complete the challenge. So I wanted to make sure that I could get the word comparison working correctly. From here I was then able to start in adding the addtional validation to ensure that the acceptance criteria in the brief were being met. 
 
-The interesting bit here was making sure that I was able ensure that the words that I was processing were valid. For this a simple check to a Dictionary API make things easy. 
+The interesting bit here was making sure that I was able ensure that the words that I was processing were valid. For this a simple check to a Dictionary API make things easy. One problem with using the API to check that the words is valid is that it slows down the process considerably as we are now dependent up on a third party API. We can make things quicker by removing this functionality but I thought it would be good to keep. 
 
 ### The information input and fluent validtion
 
@@ -32,3 +32,15 @@ With everything I needed in place I wanted to split files out into more relevant
 ### Unit Testing 
 
 I have added a Unit Test solution and the relevant files for what I would like to test. However, I haven't had the time to actually write the tests due to other commitments. 
+
+### Things to improve
+
+If I had a bit more time to complete the exercise I would have liked to add in some addition validation to ensure that the start and end words exist in the file before choosing them. 
+
+As previously mentioned ideally I would have also liked to add in the unit testing. 
+
+Some additional exception handling logic would also have been helpful so that useful messages could be displayed to the user if an error did occur. The exceptions could be logged to the debug console or to a local database depending on how much time is available. 
+
+It would also have been nice to have checked to see if the output path existed and if it didn't create the file rather than depending on it being there. 
+
+Given I know the format of the file I was able to create something relatively quickly. However, it would have been nice to be able to check the format or the file to ensure that there is a new word on every line before importing it and maybe having the ability to break words on to new lines if needed. 

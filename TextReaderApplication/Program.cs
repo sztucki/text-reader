@@ -13,8 +13,8 @@ await Host.CreateDefaultBuilder(args)
     .ConfigureLogging(builder => builder.SetMinimumLevel(LogLevel.Warning))
     .ConfigureServices((hostContext, services) => {
         services
-            .AddSingleton<IFileImporter, FileImporter>()
-            .AddSingleton<IWordProcessor, WordProcessor>()
+            .AddTransient<IFileImporter, FileImporter>()
+            .AddTransient<IWordProcessor, WordProcessor>()
             .AddHostedService<ConsoleHostedService>()
             .AddValidatorsFromAssemblyContaining<FileValidator>()
             .AddValidatorsFromAssemblyContaining<WordValidator>();
