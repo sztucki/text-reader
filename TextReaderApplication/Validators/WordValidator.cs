@@ -2,12 +2,12 @@
     using FluentValidation;
     using TextReaderApplication.Models;
 
-    public class WordValidator : AbstractValidator<string> {
+    public class WordValidator : AbstractValidator<WordClass> {
         static HttpClient client = new HttpClient();
         public WordValidator() {
             CascadeMode = CascadeMode.Stop;
-            RuleFor(s => s).Must(IsValidCharacterLength);
-            RuleFor(s => s).MustAsync((x, cancellation) => IsValidWordAsync(x));
+            RuleFor(s => s.Word).Must(IsValidCharacterLength);
+            RuleFor(s => s.Word).MustAsync((x, cancellation) => IsValidWordAsync(x));
         }
 
 

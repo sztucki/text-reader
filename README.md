@@ -12,13 +12,24 @@ To make things a bit easier during testing I have the minimum logging level to w
 
 ### Tackling the problem
 
-Now that I had a console application the next step was to review the problem which I needed to solve. Based on this the first step was to be able to get hold of the words in the file.
+Apologies for solving the wrong problem.
 
-The easiest option to this was to read all the lines of the file out into a list so that I could loop through them more easily. Then from here I would be able to loop through the words and do the checks on the words. 
+After looking at the video I realised the problem that you were asking me to solve was a lot more complicated that what I had orinially implemented. 
 
-Initially I just wanted to ensure that I would be able to complete the challenge. So I wanted to make sure that I could get the word comparison working correctly. From here I was then able to start in adding the addtional validation to ensure that the acceptance criteria in the brief were being met. 
+Based on the problem it appeared that there were going to be a very large number of possible options which I would have to loop through and narrow down. 
 
-The interesting bit here was making sure that I was able ensure that the words that I was processing were valid. For this a simple check to a Dictionary API make things easy. One problem with using the API to check that the words is valid is that it slows down the process considerably as we are now dependent up on a third party API. We can make things quicker by removing this functionality but I thought it would be good to keep. 
+The first step was to do some intial searching on possible ways in order to solve the problem. This lead to be looking at Breadth-first search which is something that I haven't come across previously.
+
+From there I was able to plan out the steps that would be needed in order to get the list of words that would be needed. The first thing I was going to need was a list of all the possible words and variations that could exist for a particular word. This would allow me to construct word trees of all the possbile options. 
+
+One of the main issues I then had was thinking about how I was going to be able to loop through the a list of words and be able to add addtional items to the loop mid flight. This pointed me in the direction of the group class.
+
+Next i needed to process through the possible options for a word passed into the queue. I could then pass thing into my varation dictionary and then see if that word appeared in my word tree list. From here I just needed to ensure that only the shortest paths got added to the list. 
+
+
+
+
+
 
 ### The information input and fluent validtion
 

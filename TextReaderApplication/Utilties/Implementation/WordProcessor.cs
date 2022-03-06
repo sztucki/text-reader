@@ -7,8 +7,8 @@ namespace TextReaderApplication {
     using System.Threading.Tasks;
     using TextReaderApplication.Models;
     public class WordProcessor : IWordProcessor {
-        private readonly IValidator<string> _wordValidator;
-        public WordProcessor(IValidator<string> wordValidator) {
+        private readonly IValidator<WordClass> _wordValidator;
+        public WordProcessor(IValidator<WordClass> wordValidator) {
             _wordValidator = wordValidator;
         }
         /// <summary>
@@ -19,6 +19,7 @@ namespace TextReaderApplication {
         /// <param name="endWord"></param>
         /// <returns></returns>
         public List<string> GetValidWords(List<string> wordList, string startWord, string endWord) {
+            
             List<string> validWords = new List<string>();
 
             int startindex = wordList.IndexOf(startWord);
@@ -26,20 +27,21 @@ namespace TextReaderApplication {
 
             int numberToSelect = endindex - startindex;
 
-            List<string> WordsInRange = wordList.Skip(startindex).Take(numberToSelect + 1).ToList();
-            var x = WordsInRange.OrderByDescending(x => x).ToList();
 
-            WordPair pair = new WordPair();
+            wordList.Sort();
+            //had to add in the plus one here due to the last item not returning
+            List<string> WordsInRange = wordList.Skip(startindex).Take(numberToSelect + 1).ToList();
+
 
             //get all of the words that differ by 1 letter from the first word.
+            
             foreach (string currentWord in WordsInRange) {
-                var status = _wordValidator.Validate(currentWord);
+                WordClass word = new WordClass(currentWord);
+                var status = _wordValidator.Validate(word);
                 if (!status.IsValid) {
                     continue;
                 }
-                //pair.PreviousWord = currentWord;
-                Console.WriteLine($"valid word: {currentWord}");
-                validWords.Add(currentWord);
+                validWords.Add(word.Word);
 
 
             }
@@ -48,7 +50,8 @@ namespace TextReaderApplication {
             return validWords;
         }
 
-        public List<string> ProcessWords(List<string> wordsInRange, string startWord, string endWord) {          
+        public List<string> ProcessWords(List<string> wordsInRange, string startWord, string endWord) {      
+            wordsInRange.Sort();
             var wordVariationDictionary = new Dictionary<string, List<string>>();
             foreach (string word in wordsInRange) {
                 AddWordToDictionary(word, wordVariationDictionary);
@@ -66,7 +69,6 @@ namespace TextReaderApplication {
                 //get an item from the queue to process
                 string currentWord = queue.Dequeue();
                 if (currentWord == endWord) {
-                    var x = wordTrees[endWord];
                     return wordTrees[endWord].OrderBy(x => x.Count).First();
                 }
                 else {
@@ -92,15 +94,19 @@ namespace TextReaderApplication {
                                 continue;
                             }
 
+                            //loop through all of the current word trees for the current word
                             foreach (var path in wordTrees[currentWord]) {
                                 List<string> newPath = new List<string>(path);
                                 newPath.Add(wordVaryingByOneCharacter);
 
+
+                            //if the word we are currently looping through doesnt have its own tree yet then add one
                                 if (!wordTrees.ContainsKey(wordVaryingByOneCharacter)) {
                                     wordTrees[wordVaryingByOneCharacter] = new List<List<string>>() { newPath };
                                 }
 
-                                else if (wordTrees[wordVaryingByOneCharacter][0].Count >= newPath.Count) {
+                                //if the path is already in the list and this one is short then add it in. 
+                                else if (wordTrees[wordVaryingByOneCharacter][0].Count > newPath.Count) {
                                     wordTrees[wordVaryingByOneCharacter].Add(newPath);
                                 }                                                              
                             }
