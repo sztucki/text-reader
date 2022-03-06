@@ -40,9 +40,9 @@ internal sealed class ConsoleHostedService : IHostedService {
                 try {
                     Console.WriteLine("Welcome to the test reader Application!");
                     Console.WriteLine("Please enter a valid file for import:");
-                    string importFilePath = Console.ReadLine() ?? "";
+                    string importFilePath = "C:\\Users\\Ben Sztucki\\Desktop\\words-english.txt";
 
-                    bool validImportFilePath = false;
+                    bool validImportFilePath = true;
                     while (validImportFilePath == false) {
                         ValidationResult result = _fileValidator.Validate(importFilePath);
                         if (result.IsValid) {
@@ -58,17 +58,22 @@ internal sealed class ConsoleHostedService : IHostedService {
 
                     List<string> wordList = await _fileImporter.GetFileWords(importFilePath);
 
+
+                    //filter out all of the words that dont have 4 characters 
+                    wordList = wordList.Where(s => s.Length == 4).ToList();
+                    wordList.Sort();
+
                     Console.WriteLine("Please enter a start word:");
-                    string startWord = Console.ReadLine() ?? "";
+                    string startWord =  "bend";
 
                     Console.WriteLine("Please enter a end word:");
-                    string endWord = Console.ReadLine() ?? "";
+                    string endWord = "prod";
 
 
                     Console.WriteLine("please enter a valid file path for an existing .txt file for output");
-                    string outputFilePath = Console.ReadLine() ?? "";
+                    string outputFilePath = "C:\\Users\\Ben Sztucki\\Desktop\\test.txt";
 
-                    bool validOutputFilePath = false;
+                    bool validOutputFilePath = true;
                     while (validOutputFilePath == false) {
                         ValidationResult result = _fileValidator.Validate(outputFilePath);
                         if (result.IsValid) {
@@ -85,7 +90,9 @@ internal sealed class ConsoleHostedService : IHostedService {
 
                     List<string> validWords = _wordProcessor.GetValidWords(wordList, startWord, endWord);
 
-                   await _fileImporter.WriteWordsToFile(outputFilePath, validWords);
+                    List<string> wordsToOutput = _wordProcessor.ProcessWords(validWords, startWord, endWord);
+
+                   await _fileImporter.WriteWordsToFile(outputFilePath, wordsToOutput);
                 }
                 catch (TaskCanceledException) {
                     // This means the application is shutting down, so just swallow this exception

@@ -8,3 +8,6 @@
 /TextReaderApplication/obj
 /TextReaderApplication/.vs/TextReaderApplication/DesignTimeBuild
 /UnitTests/obj/Release/net6.0
+/UnitTests/bin/Debug/net6.0
+/UnitTests/obj/Debug/net6.0/ref
+/UnitTests/obj/Debug/net6.0/refint
